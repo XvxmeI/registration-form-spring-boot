@@ -1,5 +1,6 @@
 package org.chandima.registration.Controller;
 
+import org.chandima.registration.Entity.Product;
 import org.chandima.registration.Entity.User;
 import org.chandima.registration.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
@@ -15,6 +17,7 @@ public class ViewController {
 
     @Autowired
     private UserService userService;
+
     @GetMapping("/signup")
     public String getSignupForm(Model model) {
         model.addAttribute("registerRequest", new User());
@@ -37,9 +40,15 @@ public class ViewController {
         boolean isAuthenticated = userService.authenticate(user.getEmail(), user.getPassword());
         if (isAuthenticated) {
             model.addAttribute("success", "Login successful!");
-            return "redirect:/dashboard?success=Login+successful!";
+            return "redirect:/products?success=Login+successful!";
         } else {
             return "redirect:/login?error";
         }
+    }
+
+    @GetMapping("/products")
+    public String getDashboard(@RequestParam(value = "success", required = false) String success, Model model) {
+        model.addAttribute("productRequest", new Product());
+        return "products";
     }
 }
